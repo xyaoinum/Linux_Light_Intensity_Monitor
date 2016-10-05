@@ -1,0 +1,20 @@
+#include <linux/kfifo.h>
+#include <linux/sched.h>
+#include <linux/light.h>
+#include <linux/lightsyn.h>
+#include <asm/atomic.h>
+
+struct light_event_node {
+	int event_id;
+	struct event_requirement req;
+	wait_queue_head_t wait_queue;
+	spinlock_t light_event_lock;
+	int wait_queue_size;
+};
+
+struct kfifo light_intensity_fifo;
+
+LIST_HEAD(light_event_list);
+
+DEFINE_SPINLOCK(light_event_list_lock);
+DEFINE_SPINLOCK(light_intensity_fifo_lock);
